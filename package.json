@@ -1,0 +1,28 @@
+{
+  "name": "equilibrium",
+  "description": "static file write stream with automatic truncate and query",
+  "version": "0.1.0",
+  "author": "Andreas Madsen <amwebdk@gmail.com>",
+  "scripts": {
+    "test": "vows test/simple/* --spec --isolate"
+  },
+  "main": "./equilibrium.js",
+  "repository" : {
+    "type": "git",
+    "url": "git://github.com/AndreasMadsen/equilibrium.git"
+  },
+  "keywords": [
+    "static",
+    "file",
+    "create",
+    "stream"
+  ],
+  "devDependencies": {
+    "vows" :  "0.6.x"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": "0.6 || 0.7 || 0.8",
+    "npm": "1"
+  }
+}
