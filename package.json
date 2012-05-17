@@ -1,7 +1,7 @@
 {
   "name": "equilibrium",
   "description": "static file write stream with automatic truncate and query",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Andreas Madsen <amwebdk@gmail.com>",
   "scripts": {
     "test": "vows test/simple/* --spec --isolate"
