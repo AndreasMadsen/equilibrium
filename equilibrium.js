@@ -91,11 +91,17 @@ Equilibrium.prototype.close = function () {
   // ignore closed fd
   if (this.fd === null) return;
 
-  fs.close(this.fd, function (error) {
-    if (error) return self.emit('error', error);
+  if (this.draining) {
+    return self.on('drain', close);
+  }
 
-    // reset fd
-    self.fd = null;
-    self.emit('close');
-	});
+  (function close() {
+    fs.close(self.fd, function (error) {
+      if (error) return self.emit('error', error);
+
+      // reset fd
+      self.fd = null;
+      self.emit('close');
+  	});
+  })();
 };
