@@ -80,6 +80,7 @@ Equilibrium.prototype.open = function () {
     // save fd
 		self.fd = fd;
     self.emit('open', fd);
+    self.drain();
 	});
 };
 
