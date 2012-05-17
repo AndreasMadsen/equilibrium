@@ -24,7 +24,7 @@ Equilibrium.prototype.write = function (state) {
 	this.state = state;
   this.updated = true;
 
-	// begin draining if a file descriptor exist
+  // write state to file
 	this.drain();
 };
 
@@ -96,22 +96,5 @@ Equilibrium.prototype.close = function () {
     // reset fd
     self.fd = null;
     self.emit('close');
-	});
-};
-
-// remove file descriptor
-Equilibrium.prototype.remove = function (callback) {
-	var self = this;
-
-	// just remove file if channel is closed
-	if (self.fd === null) {
-		fs.unlink(self.filepath, callback);
-    self.emit('removed');
-		return;
-	}
-
-	this.close(function () {
-		fs.unlink(self.filepath, callback);
-    self.emit('removed');
 	});
 };
