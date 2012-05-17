@@ -102,6 +102,6 @@ Equilibrium.prototype.close = function () {
       // reset fd
       self.fd = null;
       self.emit('close');
-  	});
+    });
   })();
 };
