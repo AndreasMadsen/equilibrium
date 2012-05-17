@@ -92,7 +92,7 @@ Equilibrium.prototype.close = function () {
   if (this.fd === null) return;
 
   if (this.draining) {
-    return self.on('drain', close);
+    return self.once('drain', close);
   }
 
   (function close() {
