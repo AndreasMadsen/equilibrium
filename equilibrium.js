@@ -5,48 +5,48 @@
 
 var fs = require('fs');
 var util = require('util');
-var events = requrie('events');
+var events = require('events');
 
 function Equilibrium(filepath) {
 	this.fd = null;
-	this.query = [];
-	this.draining = false;
+	this.state = null;
+
+  this.updated = false;
+  this.draining = false;
 	this.filepath = filepath;
 }
 util.inherits(Equilibrium, events.EventEmitter);
 module.exports = function (filepath) { return new Equilibrium(filepath); };
 
 // add query and begin draining
-Equilibrium.prototype.write = function (content) {
+Equilibrium.prototype.write = function (state) {
 	// add content to query
-	this.query.push(content);
+	this.state = state;
+  this.updated = true;
 
 	// begin draining if a file descriptor exist
-	if (this.fd) this.drain();
+	this.drain();
 };
 
 // execute query
 Equilibrium.prototype.drain = function () {
+  if (this.updated === false) return;
+	if (this.state === null) return;
   if (this.fd === null) return;
-
   if (this.draining) return;
-	this.draining = true;
 
-	// do not handle query if it's empty
-	if (this.query.length === 0) {
-		this.draining = false;
-		return;
-	}
+  // don't allow simutainiously writes
+	this.draining = true;
 
 	var self = this;
 	update(this, function handle(error) {
     if (error) self.emit('error', error);
 
-		// stop if query is empty
-		if (self.query.length === 0) {
-			self.draining = false;
+    // we are done draining
+    if (self.updated === false) {
+      self.drainging = false;
       return self.emit('drain');
-		}
+    }
 
 		// handle next query item
 		update(self, handle);
@@ -55,8 +55,8 @@ Equilibrium.prototype.drain = function () {
 
 // update file
 function update(self, callback) {
-	var content = self.query.shift();
-	var buffer = new Buffer(content);
+	var buffer = new Buffer(self.state);
+  self.updated = false;
 
 	fs.truncate(self.fd, 0, function (error) {
     if (error) return callback(error);
