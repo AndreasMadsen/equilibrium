@@ -44,7 +44,7 @@ Equilibrium.prototype.drain = function () {
 
     // we are done draining
     if (self.updated === false) {
-      self.drainging = false;
+      self.draining = false;
       return self.emit('drain');
     }
 
@@ -55,9 +55,18 @@ Equilibrium.prototype.drain = function () {
 
 // update file
 function update(self, callback) {
-	var buffer = new Buffer(self.state);
   self.updated = false;
 
+  // convert state to a string
+  var state = self.state;
+  if (typeof state === 'object' && state !== null) {
+    state = JSON.stringify(state);
+  } else {
+    state = state.toString();
+  }
+
+  // clean write to fd
+	var buffer = new Buffer(state);
 	fs.truncate(self.fd, 0, function (error) {
     if (error) return callback(error);
 
@@ -92,10 +101,10 @@ Equilibrium.prototype.close = function () {
   if (this.fd === null) return;
 
   if (this.draining) {
-    return self.once('drain', close);
+    return this.once('drain', closeFd);
   }
 
-  (function close() {
+  function closeFd() {
     fs.close(self.fd, function (error) {
       if (error) return self.emit('error', error);
 
@@ -103,5 +112,6 @@ Equilibrium.prototype.close = function () {
       self.fd = null;
       self.emit('close');
     });
-  })();
+  }
+  closeFd();
 };
