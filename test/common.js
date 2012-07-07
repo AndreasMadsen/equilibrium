@@ -8,7 +8,7 @@ var path = require('path');
 var fs = require('fs');
 
 // node < 0.8 compatibility
-exports.exists = fs.exists || path.exists;
+exports.exists = fs.exists || fs.exists;
 exports.existsSync = fs.existsSync || path.existsSync;
 
 // resolve main dirpaths
