@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/AndreasMadsen/equilibrium.png)](http://travis-ci.org/AndreasMadsen/equilibrium)
 #equilibrium
 
 **equilibrium will keep a state file up to date**
